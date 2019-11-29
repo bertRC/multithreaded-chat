@@ -11,7 +11,7 @@ public class ChatClient {
                 final BufferedWriter chatWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         ) {
             System.out.print("Enter your name please: ");
-            String name = consoleReader.readLine();
+            final String name = consoleReader.readLine();
 
             chatWriter.write(name + " has joined.");
             chatWriter.newLine();
@@ -22,6 +22,19 @@ public class ChatClient {
                 try (final BufferedReader chatReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                     while ((line = chatReader.readLine()) != null) {
                         System.out.println(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            final Thread chatWriterThread = new Thread(() -> {
+                String message;
+                try {
+                    while ((message = consoleReader.readLine()) != null) {
+                        chatWriter.write(name + ": " + message);
+                        chatWriter.newLine();
+                        chatWriter.flush();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
