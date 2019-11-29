@@ -41,7 +41,13 @@ public class ChatClient {
                 }
             });
 
-        } catch (IOException e) {
+            chatReaderThread.start();
+            chatWriterThread.start();
+
+            chatReaderThread.join();
+            chatWriterThread.join();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
