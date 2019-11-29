@@ -8,7 +8,6 @@ public class ChatClient {
         try (
                 final BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
                 final Socket socket = new Socket("localhost", 9876);
-                final BufferedReader chatReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 final BufferedWriter chatWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         ) {
             System.out.print("Enter your name please: ");
@@ -20,7 +19,7 @@ public class ChatClient {
 
             final Thread chatReaderThread = new Thread(() -> {
                 String line;
-                try {
+                try (final BufferedReader chatReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                     while ((line = chatReader.readLine()) != null) {
                         System.out.println(line);
                     }
