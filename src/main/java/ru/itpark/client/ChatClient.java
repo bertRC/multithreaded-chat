@@ -1,14 +1,23 @@
 package ru.itpark.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.Socket;
 
 public class ChatClient {
-    public static void main(String[] args) throws IOException {
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Enter your name please: ");
-        String name = consoleReader.readLine();
+    public static void main(String[] args) {
+        try (
+                final BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+                final Socket socket = new Socket("localhost", 9876);
+                final BufferedReader chatReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                final BufferedWriter chatWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        ) {
+            System.out.print("Enter your name please: ");
+            String name = consoleReader.readLine();
 
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
