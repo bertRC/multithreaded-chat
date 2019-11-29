@@ -14,6 +14,9 @@ public class ChatClient {
             System.out.print("Enter your name please: ");
             String name = consoleReader.readLine();
 
+            chatWriter.write(name + " has joined.");
+            chatWriter.newLine();
+            chatWriter.flush();
 
 
         } catch (IOException e) {
