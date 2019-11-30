@@ -12,7 +12,7 @@ public class ServerToClientLinker {
         writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
     }
 
-    public void send(String message) throws IOException {
+    public synchronized void send(String message) throws IOException {
         writer.write(message);
         writer.newLine();
         writer.flush();
