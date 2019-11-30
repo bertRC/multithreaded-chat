@@ -1,6 +1,6 @@
 package ru.itpark.server;
 
-import ru.itpark.model.ServerToClientLinker;
+import ru.itpark.model.ServerToClientConnector;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -10,19 +10,19 @@ import java.util.Set;
 
 public class ChatServer {
     public static void main(String[] args) {
-        final Set<ServerToClientLinker> linkers = new HashSet<>();
+        final Set<ServerToClientConnector> connectors = new HashSet<>();
         try (ServerSocket serverSocket = new ServerSocket(9876)) {
             while (true) {
                 final Socket socket = serverSocket.accept();
-                System.out.println(linkers.size());
+                System.out.println(connectors.size());
                 new Thread(() -> {
                     try {
-                        ServerToClientLinker linker = new ServerToClientLinker(socket);
-                        linkers.add(linker);
+                        ServerToClientConnector connector = new ServerToClientConnector(socket);
+                        connectors.add(connector);
                         String line;
-                        while ((line = linker.readLine()) != null) {
-                            for (ServerToClientLinker otherLinker : linkers) {
-                                otherLinker.send(line);
+                        while ((line = connector.readLine()) != null) {
+                            for (ServerToClientConnector otherConnector : connectors) {
+                                otherConnector.send(line);
                             }
                         }
                     } catch (IOException e) {

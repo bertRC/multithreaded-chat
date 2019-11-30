@@ -1,6 +1,6 @@
 package ru.itpark.client;
 
-import ru.itpark.model.ServerToClientLinker;
+import ru.itpark.model.ServerToClientConnector;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,15 +14,15 @@ public class ChatClient {
             final String name = consoleReader.readLine();
 
             final Socket socket = new Socket("localhost", 9876);
-            final ServerToClientLinker linker = new ServerToClientLinker(socket);
+            final ServerToClientConnector connector = new ServerToClientConnector(socket);
 
-            linker.send(name + " has joined.");
+            connector.send(name + " has joined.");
 
             new Thread(() -> {
                 String message;
                 try {
                     while ((message = consoleReader.readLine()) != null) {
-                        linker.send(name + ": " + message);
+                        connector.send(name + ": " + message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -30,7 +30,7 @@ public class ChatClient {
             }).start();
 
             String line;
-            while ((line = linker.readLine()) != null) {
+            while ((line = connector.readLine()) != null) {
                 System.out.println(line);
             }
 
