@@ -1,27 +1,30 @@
 package ru.itpark.server;
 
+import ru.itpark.model.ServerToClientLinker;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ChatServer {
     public static void main(String[] args) {
         int count = 0;
+        final Set<ServerToClientLinker> linkers = new HashSet<>();
         try (ServerSocket serverSocket = new ServerSocket(9876)) {
             while (true) {
                 final Socket socket = serverSocket.accept();
                 System.out.println(count++);
                 new Thread(() -> {
-                    try (
-                            final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                            final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    ) {
-                        // echo
+                    try {
+                        ServerToClientLinker linker = new ServerToClientLinker(socket);
+                        linkers.add(linker);
                         String line;
-                        while ((line = reader.readLine()) != null) {
-                            writer.write(line);
-                            writer.newLine();
-                            writer.flush();
+                        while ((line = linker.readLine()) != null) {
+                            for (ServerToClientLinker otherLinker : linkers) {
+                                otherLinker.send(line);
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
