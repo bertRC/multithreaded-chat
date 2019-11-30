@@ -10,12 +10,11 @@ import java.util.Set;
 
 public class ChatServer {
     public static void main(String[] args) {
-        int count = 0;
         final Set<ServerToClientLinker> linkers = new HashSet<>();
         try (ServerSocket serverSocket = new ServerSocket(9876)) {
             while (true) {
                 final Socket socket = serverSocket.accept();
-                System.out.println(count++);
+                System.out.println(linkers.size());
                 new Thread(() -> {
                     try {
                         ServerToClientLinker linker = new ServerToClientLinker(socket);
