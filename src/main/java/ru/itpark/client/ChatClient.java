@@ -9,12 +9,12 @@ public class ChatClient {
     public static void main(String[] args) {
         try (
                 final BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-                final Socket socket = new Socket("localhost", 9876);
         ) {
-            final ServerToClientLinker linker = new ServerToClientLinker(socket);
-
             System.out.print("Enter your name please: ");
             final String name = consoleReader.readLine();
+
+            final Socket socket = new Socket("localhost", 9876);
+            final ServerToClientLinker linker = new ServerToClientLinker(socket);
 
             linker.send(name + " has joined.");
 
